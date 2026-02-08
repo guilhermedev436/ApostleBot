@@ -195,14 +195,6 @@ PALAVRAS_PROIBIDAS = [
     "imbecil"
 ]
 
-DEBATE_CHANNEL_ID = 1448832962111082649
-
-PALAVRAS_PROIBIDAS = [
-    "idiota",
-    "burro",
-    "imbecil"
-]
-
 @bot.event
 async def on_message(message):
 
