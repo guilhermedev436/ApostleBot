@@ -1,3 +1,4 @@
+from email.mime import message
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
@@ -6,10 +7,13 @@ import os
 import re
 import datetime
 from datetime import time
+from dotenv import load_dotenv
+load_dotenv()
 
 # ===== INTENTS =====
 intents = discord.Intents.default()
 intents.message_content = True
+intents.guilds = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -30,7 +34,7 @@ async def on_ready():
     if not enviar_liturgia_automatica.is_running():
         enviar_liturgia_automatica.start()
 
-    print(f"Estou ligado! 🤖 {bot.user}")
+    print(f"Estou ligado! {bot.user}")
 
 
 # ===== COR DA LITURGIA =====
@@ -185,5 +189,39 @@ async def enviar_liturgia_automatica():
     embed.set_footer(text="Fonte: liturgia.up.railway.app")
 
     await canal.send(embed=embed)
+
+DEBATE_CHANNEL_ID = 1469856779784556689
+
+PALAVRAS_PROIBIDAS = [
+    "idiota",
+    "burro",
+    "imbecil"
+]
+
+@bot.event
+async def on_message(message):
+
+    if message.author.bot:
+        return
+
+    if not message.guild:
+        return
+
+    if message.channel.id != DEBATE_CHANNEL_ID:
+        return
+
+    conteudo = message.content.lower()
+
+    for palavra in PALAVRAS_PROIBIDAS:
+        if palavra in conteudo:
+            await message.delete()
+
+            aviso = await message.channel.send(
+                f"{message.author.mention}, cuidado com as palavras! 🚫"
+            )
+            await aviso.delete(delay=60)
+            break
+
+    await bot.process_commands(message)
 
 bot.run(os.getenv("DISCORD_TOKEN"))

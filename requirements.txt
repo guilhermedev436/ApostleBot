@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 discord.py
 requests
 python-dotenv
 
+=======
+discord.py
+requests
+python-dotenv
+
+>>>>>>> master

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.pyc
@@ -12,3 +13,19 @@ venv/
 
 # Sistema
 .DS_Store
+=======
+# Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual
+venv/
+.env
+.env.*
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+>>>>>>> master
