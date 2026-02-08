@@ -7,10 +7,13 @@ import os
 import re
 import datetime
 from datetime import time
+from dotenv import load_dotenv
+load_dotenv()
 
 # ===== INTENTS =====
 intents = discord.Intents.default()
 intents.message_content = True
+intents.guilds = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -31,7 +34,7 @@ async def on_ready():
     if not enviar_liturgia_automatica.is_running():
         enviar_liturgia_automatica.start()
 
-    print(f"Estou ligado! 🤖 {bot.user}")
+    print(f"Estou ligado! {bot.user}")
 
 
 # ===== COR DA LITURGIA =====
@@ -187,7 +190,7 @@ async def enviar_liturgia_automatica():
 
     await canal.send(embed=embed)
 
-DEBATE_CHANNEL_ID = 1448832962111082649
+DEBATE_CHANNEL_ID = 1469856779784556689
 
 PALAVRAS_PROIBIDAS = [
     "idiota",
@@ -204,12 +207,7 @@ async def on_message(message):
     if not message.guild:
         return
 
-    # garante que é thread (fórum)
-    if not message.channel.parent:
-        return
-
-    # verifica se a thread pertence ao fórum certo
-    if message.channel.parent.id != DEBATE_CHANNEL_ID:
+    if message.channel.id != DEBATE_CHANNEL_ID:
         return
 
     conteudo = message.content.lower()
