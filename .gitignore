@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual
+venv/
+.env
+.env.*
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
