@@ -1,4 +1,4 @@
-from email.mime import message
+
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
@@ -190,16 +190,49 @@ async def enviar_liturgia_automatica():
 
     await canal.send(embed=embed)
 
-DEBATE_CHANNEL_ID = 1469856779784556689
+DEBATE_CHANNEL_ID = 1469856779784556689 # canal do automod
+LOG_CHANNEL_ID = 1441541810454528064  # canal de advertências
+MOD_ROLE_ID = 1328141161101267006 # id do moderador
 
 PALAVRAS_PROIBIDAS = [
-    "idiota",
-    "burro",
-    "imbecil"
+    r"\bfdp\b",
+    r"\bretardado\b",
+    r"\bimbecil\b",
+    r"filho da puta",
+    r"desgraçad[oa]",
+    r"arrombado",
+    r"porra",
+    r"vai tomar no cu",
+    r"vai se foder",
+    r"\bvsf\b",
+    r"caralho",
+    r"\bcrlh\b",
+    r"\btmnc\b",
+    r"\bvtmnc\b",
+    r"\bvsfd\b",
+    r"foda[- ]?se",
+    r"\bfds\b",
+    r"piroca",
+    r"buceta",
+    r"chibiu|xebiu|xibiu",
+    r"pau no cu",
+    r"pica",
+    r"poha|pha|prr",
+    r"cacete",
+    r"puta que pariu",
+    r"vai tomar no rabo",
+    r"\bpqp\b",
+    r"desgraç?a",
+    r"rola",
+    r"\bcu\b",
+    r"brioco"
 ]
 
 @bot.event
-async def on_message(message):
+async def on_message(message: discord.Message):
+
+    log_channel = message.guild.get_channel(LOG_CHANNEL_ID)
+    mod_role = message.guild.get_role(MOD_ROLE_ID)
 
     if message.author.bot:
         return
@@ -212,14 +245,44 @@ async def on_message(message):
 
     conteudo = message.content.lower()
 
-    for palavra in PALAVRAS_PROIBIDAS:
-        if palavra in conteudo:
+    for padrao in PALAVRAS_PROIBIDAS:
+        if re.search(padrao, conteudo):
             await message.delete()
 
             aviso = await message.channel.send(
                 f"{message.author.mention}, cuidado com as palavras! 🚫"
             )
             await aviso.delete(delay=60)
+            
+            embed = discord.Embed(
+                title="🚨 Advertência Automática",
+                color=discord.Color.red(),
+                timestamp=datetime.datetime.utcnow()
+            )
+            embed.add_field(
+                name="👤 Usuário",
+                value=f"{message.author} ({message.author.id})",
+                inline=False
+            )
+            embed.add_field(
+                name="📍 Canal",
+                value=message.channel.mention,
+                inline=False
+            )
+            embed.add_field(
+                name="🚫 Palavra / Frase",
+                value=f"`{padrao}`",
+                inline=False
+            )
+            embed.add_field(
+                name="💬 Mensagem original",
+                value=message.content[:1000],
+                inline=False
+            )
+            await log_channel.send(
+                content=mod_role.mention if mod_role else None,
+                embed=embed
+            )
             break
 
     await bot.process_commands(message)
