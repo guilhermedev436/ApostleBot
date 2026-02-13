@@ -312,17 +312,17 @@ async def on_message(message: discord.Message):
 @bot.tree.command(name="info", description="Informações sobre o bot")
 async def info(interaction: discord.Interaction):
     embed = discord.Embed(
-        title="😗 Informações sobre mim",
+        title="😗Informações sobre mim",
         description="Fui desenvolvido com o intuito de ajudar na gestão de liturgias e moderar discussões no servidor além de outras funções extras.",
         color=discord.Color.yellow()
     )
     embed.add_field(
-        name="📚 Liturgia",
+        name="📚Liturgia",
         value="Use o comando `/liturgia` para obter a liturgia completa do dia ou de uma data específica.",
         inline=False
     )
     embed.add_field(
-        name="🚫 Moderação",
+        name="🚫Automod",
         value="O bot monitora mensagens em threads do canal de debates e remove mensagens com palavras proibidas, enviando um aviso ao usuário e registrando a infração no canal de logs.",
         inline=False
     )
