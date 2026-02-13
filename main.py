@@ -13,6 +13,8 @@ load_dotenv()
 # ===== INTENTS =====
 intents = discord.Intents.default()
 intents.message_content = True
+intents.messages = True
+intents.guild_messages = True
 intents.guilds = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -190,9 +192,10 @@ async def enviar_liturgia_automatica():
 
     await canal.send(embed=embed)
 
-DEBATE_CHANNEL_ID = 1469856779784556689 # canal do automod
+DEBATE_CHANNEL_ID = 1471648502567145627 # canal do automod
 LOG_CHANNEL_ID = 1441541810454528064  # canal de advertências
 MOD_ROLE_ID = 1328141161101267006 # id do moderador
+ADMIN_ROLE_ID = 1468779653647962296 #id do mod que nn pode banir
 
 PALAVRAS_PROIBIDAS = [
     r"\bfdp\b",
@@ -212,7 +215,7 @@ PALAVRAS_PROIBIDAS = [
     r"\bvsfd\b",
     r"foda[- ]?se",
     r"\bfds\b",
-    r"piroca",
+    r"piroca|pirocudo",
     r"buceta",
     r"chibiu|xebiu|xibiu",
     r"pau no cu",
@@ -225,7 +228,9 @@ PALAVRAS_PROIBIDAS = [
     r"desgraç?a",
     r"rola",
     r"\bcu\b",
-    r"brioco"
+    r"brioco",
+    r"pinto",
+    r"viado"
 ]
 
 @bot.event
@@ -233,6 +238,7 @@ async def on_message(message: discord.Message):
 
     log_channel = message.guild.get_channel(LOG_CHANNEL_ID)
     mod_role = message.guild.get_role(MOD_ROLE_ID)
+    admin_role = message.guild.get_role(ADMIN_ROLE_ID)
 
     if message.author.bot:
         return
@@ -240,7 +246,12 @@ async def on_message(message: discord.Message):
     if not message.guild:
         return
 
-    if message.channel.id != DEBATE_CHANNEL_ID:
+    # Verifica se está dentro de uma thread
+    if not isinstance(message.channel, discord.Thread):
+        return
+
+    # Verifica se a thread pertence ao fórum desejado
+    if message.channel.parent_id != DEBATE_CHANNEL_ID:
         return
 
     conteudo = message.content.lower()
@@ -250,7 +261,7 @@ async def on_message(message: discord.Message):
             await message.delete()
 
             aviso = await message.channel.send(
-                f"{message.author.mention}, cuidado com as palavras! 🚫"
+                f"{message.author.mention}, cuidado com as palavras! 🚫🤐"
             )
             await aviso.delete(delay=60)
             
@@ -279,8 +290,16 @@ async def on_message(message: discord.Message):
                 value=message.content[:1000],
                 inline=False
             )
+            mencoes = []
+
+            if mod_role:
+                mencoes.append(mod_role.mention)
+
+            if admin_role:
+                mencoes.append(admin_role.mention)
+
             await log_channel.send(
-                content=mod_role.mention if mod_role else None,
+                content=" ".join(mencoes) if mencoes else None,
                 embed=embed
             )
             break
