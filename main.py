@@ -36,6 +36,9 @@ async def on_ready():
     if not enviar_liturgia_automatica.is_running():
         enviar_liturgia_automatica.start()
 
+    if not enviar_rank.is_running():
+        enviar_rank.start()
+
     print(f"Estou ligado! {bot.user}")
 
 
@@ -157,7 +160,7 @@ async def liturgia(
 
     await interaction.response.send_message(embed=embed)
 
-@tasks.loop(time=time(19, 0))
+@tasks.loop(time=time(18, 0))
 async def enviar_liturgia_automatica():
     canal = bot.get_channel(1448836352761135268)
 
@@ -329,5 +332,16 @@ async def info(interaction: discord.Interaction):
     embed.set_footer(text="Bot desenvolvido pelo adm Zokyss")
 
     await interaction.response.send_message(embed=embed, file=imagem)
+
+RANK_CHANNEL_ID = 123456789012345678  # id do canal de rank aonde o bot enviara t!top para mostrar o rank do servidor por meio do bot Tatsu
+
+@tasks.loop(time=[time(10, 0), time(21, 0)])  
+async def enviar_rank():
+    canal = bot.get_channel(RANK_CHANNEL_ID)
+
+    if not canal:
+        return
+
+    await canal.send("t!top")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
