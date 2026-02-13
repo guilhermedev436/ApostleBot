@@ -25,7 +25,7 @@ async def on_ready():
     await bot.tree.sync()
     
     atividade = discord.CustomActivity(
-        name="PriestHelper | /liturgia"
+        name="PriestHelper | /info"
     )
 
     await bot.change_presence(
@@ -305,5 +305,29 @@ async def on_message(message: discord.Message):
             break
 
     await bot.process_commands(message)
+
+@bot.tree.command(name="info", description="Informações sobre o bot")
+async def info(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="😗 Informações sobre mim",
+        description="Fui desenvolvido com o intuito de ajudar na gestão de liturgias e moderar discussões no servidor além de outras funções extras.",
+        color=discord.Color.yellow()
+    )
+    embed.add_field(
+        name="📚 Liturgia",
+        value="Use o comando `/liturgia` para obter a liturgia completa do dia ou de uma data específica.",
+        inline=False
+    )
+    embed.add_field(
+        name="🚫 Moderação",
+        value="O bot monitora mensagens em threads do canal de debates e remove mensagens com palavras proibidas, enviando um aviso ao usuário e registrando a infração no canal de logs.",
+        inline=False
+    )
+
+    imagem = discord.File("PriestHelper.jpg", filename="PriestHelper.jpg")
+    embed.set_thumbnail(url="attachment://PriestHelper.jpg")
+    embed.set_footer(text="Bot desenvolvido pelo adm Zokyss")
+
+    await interaction.response.send_message(embed=embed, file=imagem)
 
 bot.run(os.getenv("DISCORD_TOKEN"))
