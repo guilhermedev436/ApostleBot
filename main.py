@@ -25,7 +25,7 @@ async def on_ready():
     await bot.tree.sync()
     
     atividade = discord.CustomActivity(
-        name="PriestHelper | /info"
+        name="Automod e Liturgia | /info"
     )
 
     await bot.change_presence(
@@ -233,7 +233,17 @@ PALAVRAS_PROIBIDAS = [
     r"\bcu\b",
     r"brioco",
     r"pinto",
-    r"viado"
+    r"viado",
+    r"pênis|penis",
+    r"bucetinha",
+    r"goza|gozei|gozada",
+    r"fuder|fudi|fudeu",
+    r"fudendo",
+    r"fudida|fudido",
+    r"gostoso|gostosa",
+    r"bucetão",
+    r"xvideos?|xvideos|xhamster|pornhub|redtube|youporn|xnxx",
+    r"nigger|nigga|negro|preto de merda|macaco de merda|filho da puta preto|filho da puta negro|filho da puta macaco"
 ]
 
 @bot.event
@@ -264,7 +274,7 @@ async def on_message(message: discord.Message):
             await message.delete()
 
             aviso = await message.channel.send(
-                f"{message.author.mention}, cuidado com as palavras! 🚫🤐"
+                f"{message.author.mention}, cuidado com as palavras! 🤐"
             )
             await aviso.delete(delay=60)
             
@@ -312,17 +322,17 @@ async def on_message(message: discord.Message):
 @bot.tree.command(name="info", description="Informações sobre o bot")
 async def info(interaction: discord.Interaction):
     embed = discord.Embed(
-        title="😗Informações sobre mim",
+        title="✝  Informações sobre mim",
         description="Fui desenvolvido com o intuito de ajudar na gestão de liturgias e moderar discussões no servidor além de outras funções extras.",
         color=discord.Color.yellow()
     )
     embed.add_field(
-        name="📚Liturgia",
+        name="📚  Liturgia",
         value="Use o comando `/liturgia` para obter a liturgia completa do dia ou de uma data específica.",
         inline=False
     )
     embed.add_field(
-        name="🚫Automod",
+        name="🚫  Automod",
         value="O bot monitora mensagens em threads do canal de debates e remove mensagens com palavras proibidas, enviando um aviso ao usuário e registrando a infração no canal de logs.",
         inline=False
     )
@@ -333,9 +343,9 @@ async def info(interaction: discord.Interaction):
 
     await interaction.response.send_message(embed=embed, file=imagem)
 
-RANK_CHANNEL_ID = 123456789012345678  # id do canal de rank aonde o bot enviara t!top para mostrar o rank do servidor por meio do bot Tatsu
+RANK_CHANNEL_ID = 1449194474046754876  # id do canal de rank aonde o bot enviara t!top para mostrar o rank do servidor por meio do bot Tatsu
 
-@tasks.loop(time=[time(10, 0), time(21, 0)])  
+@tasks.loop(time=time(10, 0))  
 async def enviar_rank():
     canal = bot.get_channel(RANK_CHANNEL_ID)
 
