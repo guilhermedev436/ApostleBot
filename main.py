@@ -36,11 +36,7 @@ async def on_ready():
     if not enviar_liturgia_automatica.is_running():
         enviar_liturgia_automatica.start()
 
-    if not enviar_rank.is_running():
-        enviar_rank.start()
-
     print(f"Estou ligado! {bot.user}")
-
 
 # ===== COR DA LITURGIA =====
 def cor_embed(cor_liturgica: str) -> int:
