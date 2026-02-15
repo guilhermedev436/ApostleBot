@@ -345,13 +345,4 @@ async def info(interaction: discord.Interaction):
 
 RANK_CHANNEL_ID = 1449194474046754876  # id do canal de rank aonde o bot enviara t!top para mostrar o rank do servidor por meio do bot Tatsu
 
-@tasks.loop(time=time(10, 0))  
-async def enviar_rank():
-    canal = bot.get_channel(RANK_CHANNEL_ID)
-
-    if not canal:
-        return
-
-    await canal.send("t!top")
-
 bot.run(os.getenv("DISCORD_TOKEN"))
