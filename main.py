@@ -281,7 +281,8 @@ PALAVRAS_PROIBIDAS = [
     r"\brapariga\b",
     r"\bcorno manso\b",
     r"\bcorno do caralho\b",
-    r"\bmaconheiro\b"
+    r"\bmaconheiro\b",
+    r"puta",
 ]
 
 @bot.event
