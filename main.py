@@ -376,10 +376,6 @@ async def info(interaction: discord.Interaction):
         inline=False
     )
 
-    imagem = discord.File("PriestHelper.jpg", filename="PriestHelper.jpg")
-    embed.set_thumbnail(url="attachment://PriestHelper.jpg")
-    embed.set_footer(text="Bot desenvolvido pelo adm Zokyss")
-
-    await interaction.response.send_message(embed=embed, file=imagem)
+    await interaction.response.send_message(embed=embed)
 
 bot.run(os.getenv("DISCORD_TOKEN"))
