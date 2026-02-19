@@ -1,31 +1,58 @@
-<<<<<<< HEAD
-# Python
-__pycache__/
-*.pyc
+# ==========================
+# PYTHON
+# ==========================
 
-# Ambiente virtual
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ==========================
+# AMBIENTE VIRTUAL
+# ==========================
+
 venv/
+.venv/
+env/
+ENV/
+
+# ==========================
+# VARIÁVEIS DE AMBIENTE
+# ==========================
+
 .env
 .env.*
+*.env
 
-# Logs
+# ==========================
+# LOGS
+# ==========================
+
 *.log
 
-# Sistema
+# ==========================
+# VS CODE
+# ==========================
+
+.vscode/
+
+# ==========================
+# SISTEMA OPERACIONAL
+# ==========================
+
 .DS_Store
-=======
-# Python
-__pycache__/
-*.pyc
+Thumbs.db
 
-# Ambiente virtual
-venv/
-.env
-.env.*
+# ==========================
+# BUILD / DIST
+# ==========================
 
-# Logs
-*.log
+build/
+dist/
+*.egg-info/
 
-# Sistema
-.DS_Store
->>>>>>> master
+# ==========================
+# ARQUIVOS TEMPORÁRIOS
+# ==========================
+
+*.tmp
+*.bak
