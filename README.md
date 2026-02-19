@@ -14,24 +14,13 @@ Bot Discord em Python para gerenciamento de liturgias e moderação automática.
 - [requirements.txt](requirements.txt) — dependências do projeto.
 - [LICENSE](LICENSE) — licença do projeto.
 
-**Instalação**
-1. Crie e ative um ambiente virtual (recomendado):
+**Instruções**
 
-```bash
-python -m venv .venv
-.\.venv\Scripts\activate
-```
-
-2. Instale dependências:
-
-```bash
-pip install -r requirements.txt
-```
-
-3. Crie um arquivo `.env` na raiz com a variável `DISCORD_TOKEN`:
+1. Crie um arquivo `.env` na raiz da pasta com a variável `DISCORD_TOKEN`:
 
 ```
 DISCORD_TOKEN=seu_token_aqui
+
 ```
 
 **Configuração**
