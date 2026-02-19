@@ -313,7 +313,7 @@ async def on_message(message: discord.Message):
             await message.delete()
 
             aviso = await message.channel.send(
-                f"{message.author.mention}, cuidado com as palavras! 🤐"
+                f"{message.author.mention}, Cuidado com as palavras! 🕵️‍♂️🤐"
             )
             await aviso.delete(delay=60)
             
