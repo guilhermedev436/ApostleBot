@@ -5,6 +5,7 @@ from discord import app_commands
 import requests
 import os
 import re
+import aiohttp
 import datetime
 from datetime import time
 from dotenv import load_dotenv
@@ -128,7 +129,7 @@ async def liturgia(
         embed,
         "Primeira Leitura",
         leituras.get("primeiraLeitura", []),
-        "📖"
+        "📕"
     )
 
     adicionar_leituras(
@@ -195,6 +196,61 @@ DEBATE_CHANNEL_ID = 1471648502567145627 # canal do automod
 LOG_CHANNEL_ID = 1441541810454528064  # canal de advertências
 MOD_ROLE_ID = 1328141161101267006 # id do moderador
 ADMIN_ROLE_ID = 1468779653647962296 #id do mod que nn pode banir
+
+async def buscar_versiculo(livro, capitulo, versiculo):
+    referencia = f"{livro} {capitulo}:{versiculo}"
+    url = f"https://bible-api.com/{livro}+{capitulo}:{versiculo}?translation=almeida"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resposta:
+            if resposta.status == 200:
+                return await resposta.json()
+            return None
+
+@bot.tree.command(name="versiculo", description="Busca um versículo ou intervalo da Bíblia")
+@app_commands.describe(
+    livro="Nome do livro (ex: João)",
+    capitulo="Número do capítulo",
+    versiculos="Versículo ou intervalo (ex: 16 ou 1-15)"
+)
+async def versiculo(
+    interaction: discord.Interaction,
+    livro: str,
+    capitulo: int,
+    versiculos: str
+):
+
+    await interaction.response.defer()
+
+    referencia = f"{livro} {capitulo}:{versiculos}"
+    url = f"https://bible-api.com/{livro}+{capitulo}:{versiculos}?translation=almeida"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resposta:
+            if resposta.status == 200:
+                dados = await resposta.json()
+            else:
+                dados = None
+
+    if not dados or "text" not in dados:
+        await interaction.followup.send("❌ Não encontrei essa referência.")
+        return
+
+    texto = dados["text"]
+
+    # Discord limita embed a 4096 caracteres
+    if len(texto) > 4000:
+        texto = texto[:4000] + "\n\n(...continuação trancada)"
+
+    embed = discord.Embed(
+        title=f"📖 {dados['reference']}",
+        description=texto,
+        color=discord.Color.gold()
+    )
+
+    embed.set_footer(text="Bíblia Sagrada")
+
+    await interaction.followup.send(embed=embed)
 
 PALAVRAS_PROIBIDAS = [
     r"\bfdp\b",
@@ -375,6 +431,12 @@ async def info(interaction: discord.Interaction):
         value="O bot monitora mensagens em threads do canal de debates e remove mensagens com palavras proibidas, enviando um aviso ao usuário e registrando a infração no canal de logs.",
         inline=False
     )
+    embed.add_field(
+        name="📖  Versículos",
+        value="Use o comando `/versiculo` para buscar versículos ou intervalos da Bíblia (ex: `/versiculo livro: João capitulo: 3 versiculos: 16-18`).",
+        inline=False
+    )
+
 
     await interaction.response.send_message(embed=embed)
 
