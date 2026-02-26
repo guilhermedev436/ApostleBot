@@ -250,6 +250,48 @@ async def versiculo(
 
     embed.set_footer(text="Bíblia Sagrada")
 
+@bot.tree.command(name="capitulo", description="Mostra um capítulo inteiro da Bíblia")
+@app_commands.describe(
+    livro="Nome do livro (ex: João)",
+    capitulo="Número do capítulo"
+)
+async def capitulo(
+    interaction: discord.Interaction,
+    livro: str,
+    capitulo: int
+):
+    await interaction.response.defer()
+
+    url = f"https://bible-api.com/{livro}+{capitulo}?translation=almeida"
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resposta:
+            if resposta.status == 200:
+                dados = await resposta.json()
+            else:
+                dados = None
+
+    if not dados or "text" not in dados:
+        await interaction.followup.send("❌ Não encontrei esse capítulo.")
+        return
+
+    texto = dados["text"]
+    partes = dividir_texto(texto, 1024)
+
+    embed = discord.Embed(
+        title=f"📖 {livro} {capitulo}",
+        color=discord.Color.gold()
+    )
+
+    for i, parte in enumerate(partes):
+        embed.add_field(
+            name=f"Sub-Tópico {i+1}",
+            value=parte,
+            inline=False
+        )
+
+    embed.set_footer(text="Bíblia Sagrada")
+
     await interaction.followup.send(embed=embed)
 
 PALAVRAS_PROIBIDAS = [
@@ -432,11 +474,15 @@ async def info(interaction: discord.Interaction):
         inline=False
     )
     embed.add_field(
-        name="📖  Versículos",
+        name="📙  Versículos",
         value="Use o comando `/versiculo` para buscar versículos ou intervalos da Bíblia (ex: `/versiculo livro: João capitulo: 3 versiculos: 16-18`).",
         inline=False
     )
-
+    embed.add_field(
+        name="📒  Capítulos",
+        value="Use o comando `/capitulo` para ver um capítulo inteiro do livro bíblico selecionado.",
+        inline=False
+    )
 
     await interaction.response.send_message(embed=embed)
 
