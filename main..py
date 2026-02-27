@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands
@@ -24,7 +23,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     await bot.tree.sync()
-    
+
     atividade = discord.CustomActivity(
         name="Automod e Liturgia | /info"
     )
@@ -414,7 +413,7 @@ async def on_message(message: discord.Message):
                 f"{message.author.mention}, Cuidado com as palavras! 🕵️‍♂️🤐"
             )
             await aviso.delete(delay=60)
-            
+
             embed = discord.Embed(
                 title="🚨 Advertência Automática",
                 color=discord.Color.red(),
@@ -465,7 +464,7 @@ async def info(interaction: discord.Interaction):
     )
     embed.add_field(
         name="📚  Liturgia",
-        value="Use o comando `/liturgia` para obter a liturgia completa do dia ou de uma data específica.",
+        value="O bot tem acesso a liturgia via api, use o comando `/liturgia` para obter a liturgia completa do dia ou de uma data específica, além disso, o bot manda a liturgia diária automaticamente as 3:00h",
         inline=False
     )
     embed.add_field(
@@ -475,12 +474,13 @@ async def info(interaction: discord.Interaction):
     )
     embed.add_field(
         name="📙  Versículos",
-        value="Use o comando `/versiculo` para buscar versículos ou intervalos da Bíblia (ex: `/versiculo livro: João capitulo: 3 versiculos: 16-18`).",
+        value="O bot usa api para entregar versículos da Bíblia organizados em embed aqui no Discord, use o comando `/versiculo` para buscar versículos ou intervalos da Bíblia (ex: `/versiculo livro: João capitulo: 3 versiculos: 16-18`).",
         inline=False
     )
+
     embed.add_field(
-        name="📒  Capítulos",
-        value="Use o comando `/capitulo` para ver um capítulo inteiro do livro bíblico selecionado.",
+        name="📕  Capítulos",
+        value="Entrega capítulos da Bíblia por meio da api organizados em Sub-Tópicos, use o comando `/capitulo` para ver um capítulo inteiro do livro bíblico selecionado.",
         inline=False
     )
 
