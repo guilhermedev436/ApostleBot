@@ -231,12 +231,12 @@ async def capitulo(
 
     for i, parte in enumerate(partes):
         embed.add_field(
-            name=f"Sub-Tópico {i+1}",
+            name=f"Trecho: {i+1}",
             value=parte,
             inline=False
         )
 
-    embed.set_footer(text="Bíblia Sagrada")
+    embed.set_footer(text=f"{livro} - Bíblia: Tradução Almeida")
 
     await interaction.followup.send(embed=embed)
 
@@ -405,7 +405,7 @@ async def on_message(message: discord.Message):
 @bot.tree.command(name="info", description="Informações sobre o bot")
 async def info(interaction: discord.Interaction):
     embed = discord.Embed(
-        title=f"✝  Informações sobre {bot.user.name}",
+        title=f"⛪  Informações sobre {bot.user.name}",
         description="Foi desenvolvido com o intuito de ajudar na gestão de liturgias e moderar discussões em servidores além de outras funções extras.",
         color=discord.Color.yellow()
     )
