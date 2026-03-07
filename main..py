@@ -25,7 +25,7 @@ async def on_ready():
     await bot.tree.sync()
 
     atividade = discord.CustomActivity(
-        name="Automod e Liturgia | /info"
+        name="/info para informações 📃"
     )
 
     await bot.change_presence(
@@ -193,61 +193,8 @@ async def enviar_liturgia_automatica():
 
 DEBATE_CHANNEL_ID = 1471648502567145627 # canal do automod
 LOG_CHANNEL_ID = 1441541810454528064  # canal de advertências
-MOD_ROLE_ID = 1328141161101267006 # id do moderador
-ADMIN_ROLE_ID = 1468779653647962296 #id do mod que nn pode banir
-
-async def buscar_versiculo(livro, capitulo, versiculo):
-    referencia = f"{livro} {capitulo}:{versiculo}"
-    url = f"https://bible-api.com/{livro}+{capitulo}:{versiculo}?translation=almeida"
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resposta:
-            if resposta.status == 200:
-                return await resposta.json()
-            return None
-
-@bot.tree.command(name="versiculo", description="Busca um versículo ou intervalo da Bíblia")
-@app_commands.describe(
-    livro="Nome do livro (ex: João)",
-    capitulo="Número do capítulo",
-    versiculos="Versículo ou intervalo (ex: 16 ou 1-15)"
-)
-async def versiculo(
-    interaction: discord.Interaction,
-    livro: str,
-    capitulo: int,
-    versiculos: str
-):
-
-    await interaction.response.defer()
-
-    referencia = f"{livro} {capitulo}:{versiculos}"
-    url = f"https://bible-api.com/{livro}+{capitulo}:{versiculos}?translation=almeida"
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as resposta:
-            if resposta.status == 200:
-                dados = await resposta.json()
-            else:
-                dados = None
-
-    if not dados or "text" not in dados:
-        await interaction.followup.send("❌ Não encontrei essa referência.")
-        return
-
-    texto = dados["text"]
-
-    # Discord limita embed a 4096 caracteres
-    if len(texto) > 4000:
-        texto = texto[:4000] + "\n\n(...continuação trancada)"
-
-    embed = discord.Embed(
-        title=f"📖 {dados['reference']}",
-        description=texto,
-        color=discord.Color.gold()
-    )
-
-    embed.set_footer(text="Bíblia Sagrada")
+MOD_ROLE_ID = 1328141161101267006 # id do moderador (permissão total)
+ADMIN_ROLE_ID = 1468779653647962296 #id do mod que nn pode banir outros menbros
 
 @bot.tree.command(name="capitulo", description="Mostra um capítulo inteiro da Bíblia")
 @app_commands.describe(
@@ -458,28 +405,23 @@ async def on_message(message: discord.Message):
 @bot.tree.command(name="info", description="Informações sobre o bot")
 async def info(interaction: discord.Interaction):
     embed = discord.Embed(
-        title="✝  Informações sobre mim",
-        description="Fui desenvolvido com o intuito de ajudar na gestão de liturgias e moderar discussões no servidor além de outras funções extras.",
+        title=f"✝  Informações sobre {bot.user.name}",
+        description="Foi desenvolvido com o intuito de ajudar na gestão de liturgias e moderar discussões em servidores além de outras funções extras.",
         color=discord.Color.yellow()
     )
     embed.add_field(
-        name="📚  Liturgia",
+        name="📘  Liturgia",
         value="O bot tem acesso a liturgia via api, use o comando `/liturgia` para obter a liturgia completa do dia ou de uma data específica, além disso, o bot manda a liturgia diária automaticamente as 3:00h",
         inline=False
     )
     embed.add_field(
-        name="🚫  Automod",
+        name="🕵️‍♂️  Automod",
         value="O bot monitora mensagens em threads do canal de debates e remove mensagens com palavras proibidas, enviando um aviso ao usuário e registrando a infração no canal de logs.",
-        inline=False
-    )
-    embed.add_field(
-        name="📙  Versículos",
-        value="O bot usa api para entregar versículos da Bíblia organizados em embed aqui no Discord, use o comando `/versiculo` para buscar versículos ou intervalos da Bíblia (ex: `/versiculo livro: João capitulo: 3 versiculos: 16-18`).",
         inline=False
     )
 
     embed.add_field(
-        name="📕  Capítulos",
+        name="📗  Capítulos",
         value="Entrega capítulos da Bíblia por meio da api organizados em Sub-Tópicos, use o comando `/capitulo` para ver um capítulo inteiro do livro bíblico selecionado.",
         inline=False
     )
